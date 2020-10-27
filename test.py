@@ -13,16 +13,25 @@ from image_utils import ImageVisualizer
 from losses import create_losses
 from network import create_ssd
 from PIL import Image
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
+from tensorflow.python.training.tracking.data_structures import NoDependency
+# self.c = NoDependency({})
 
+config = ConfigProto()
+config.gpu_options.allow_growth = True
+#session = InteractiveSession(config=config)
+session = tf.compat.v1.Session(config=config)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data-dir', default='../dataset')
+parser.add_argument('--data-dir', default='../data/VOCdevkit')
 parser.add_argument('--data-year', default='2007')
 parser.add_argument('--arch', default='ssd300')
-parser.add_argument('--num-examples', default=-1, type=int)
+parser.add_argument('--num-examples', default=100, type=int)
 parser.add_argument('--pretrained-type', default='specified')
 parser.add_argument('--checkpoint-dir', default='')
-parser.add_argument('--checkpoint-path', default='')
+parser.add_argument('--checkpoint-path',
+                    default='./checkpoints/ssd_epoch_100.h5')
 parser.add_argument('--gpu-id', default='0')
 
 args = parser.parse_args()
@@ -98,11 +107,12 @@ if __name__ == '__main__':
                          args.pretrained_type,
                          args.checkpoint_dir,
                          args.checkpoint_path)
+
     except Exception as e:
         print(e)
         print('The program is exiting...')
         sys.exit()
-
+    # ssd.save('./checkpoints/1.h5')   # 保存模型
     os.makedirs('outputs/images', exist_ok=True)
     os.makedirs('outputs/detects', exist_ok=True)
     visualizer = ImageVisualizer(info['idx_to_name'], save_dir='outputs/images')

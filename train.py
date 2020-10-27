@@ -10,13 +10,19 @@ from voc_data import create_batch_generator
 from anchor import generate_default_boxes
 from network import create_ssd
 from losses import create_losses
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
+ 
+config = ConfigProto()
+config.gpu_options.allow_growth = True
+session = InteractiveSession(config=config)
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data-dir', default='../dataset')
+parser.add_argument('--data-dir', default='./data/VOCdevkit')
 parser.add_argument('--data-year', default='2007')
 parser.add_argument('--arch', default='ssd300')
-parser.add_argument('--batch-size', default=32, type=int)
+parser.add_argument('--batch-size', default=8, type=int)
 parser.add_argument('--num-batches', default=-1, type=int)
 parser.add_argument('--neg-ratio', default=3, type=int)
 parser.add_argument('--initial-lr', default=1e-3, type=float)

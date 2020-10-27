@@ -25,7 +25,7 @@ class SSD(Model):
         self.extra_layers = create_extra_layers()
         self.conf_head_layers = create_conf_head_layers(num_classes)
         self.loc_head_layers = create_loc_head_layers()
-
+        # self._set_inputs(tf.TensorSpec([None, None,None,None], tf.float32, name='input'))  # 自己加的
         if arch == 'ssd300':
             self.extra_layers.pop(-1)
             self.conf_head_layers.pop(-2)
